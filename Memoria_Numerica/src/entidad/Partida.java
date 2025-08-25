@@ -12,6 +12,8 @@ import java.time.LocalDate;
 @Table(name = "Partidas")
 public class Partida {
 
+    //Clase Partida con sus atributos y validaciones para evitar datos nulos dentro de la base de datos
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,11 +50,10 @@ public class Partida {
 
 
     //Constructor vacio
-
-
     public Partida() {
     }
 
+    //Constructor lleno con los atributos de la clase partida que inicializa sus datos por defecto
     public Partida(Jugador jugador, String nivel, short intentos, float tiempo, LocalDate fecha) {
         this.jugador = jugador;
         this.nivel = nivel;
@@ -62,8 +63,6 @@ public class Partida {
     }
 
     //Getters and setters de la clase Partida para permiter el acceso a los atributos
-
-
     public double getPuntaje() {
         return puntaje;
     }
@@ -128,6 +127,7 @@ public class Partida {
         this.descripcion = descripcion;
     }
 
+    //Metodo que devuelve de manera ordenada los atributos
     @Override
     public String toString(){
         return "Partida { " +

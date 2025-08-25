@@ -10,13 +10,13 @@ import java.util.List;
 
 public class PartidaService {
 
+    //Dentro de la clase service se define los metodos del dao y le damos una inicializacion llamandolos desde el service
+    //Aqui es donde se encuentra los metodos que podemos realizar con una Partida o cualquier Objeto
     private final PartidaDao partidaDao;
 
     public PartidaService() {
         this.partidaDao = new PartidaDao();
     }
-
-
 
     // MANTENER MÉTODOS DE CONSULTA - ESTOS SÍ PERTENECEN AQUÍ
     public List<Partida> listarPartidaServ(Long jugadorId){

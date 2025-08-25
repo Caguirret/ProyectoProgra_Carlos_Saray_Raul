@@ -9,6 +9,9 @@ import java.util.List;
 
 public class JugadorService {
 
+    //Dentro de la clase service se define los metodos del dao y le damos una inicializacion llamandolos desde el service
+    //Aqui es donde se encuentra los metodos que podemos realizar con una Jugador o cualquier Objeto
+
     private final JugadorDao jugadorDao;
 
     public JugadorService() {

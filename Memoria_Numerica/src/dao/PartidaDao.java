@@ -12,9 +12,12 @@ import java.util.List;
 
 public class PartidaDao {
 
+    //La capa de acceso a datos de la clase Partida esta hecha para que se pueda administar los servicios y acciones que podemos realizar
+    //Dentro de la base de datos con las partidas
 
     // Guardar o actualizar partida
     public void guardarPartida(Partida partida) {
+        //Validaciones para evitar cualquier dato erroneo del administrador
         if (partida == null) {
             throw new IllegalArgumentException("La partida no puede ser nula");
         }
@@ -55,6 +58,7 @@ public class PartidaDao {
         }
     }
 
+    //Metodo que recibe por parametros el ID y lo busca dentro de la base de datos
     public Partida buscarPorId(Long id) {
         EntityManager em = JpaUtil.getEntityManager();
         try {
@@ -64,10 +68,12 @@ public class PartidaDao {
         }
     }
 
+    //Metodo que busca por parametros dentro de la base de datos el ID de la partida especificamente
     public boolean existeId(Long id) {
         return buscarPorId(id) != null;
     }
 
+    //Metodo que se encarga de eliminar la partida seleccionada
     public void borrarPartida(Long id) {
         EntityManager em = JpaUtil.getEntityManager();
         try {
@@ -85,6 +91,7 @@ public class PartidaDao {
         }
     }
 
+    //Metodo que lista todas las partidas
     public List<Partida> listar(Long jugadorId) {
         EntityManager em = JpaUtil.getEntityManager();
         try {
@@ -98,6 +105,7 @@ public class PartidaDao {
         }
     }
 
+    //metodo sin filtros que busca todas las partidas
     public List<Partida> listarTodas() {
         EntityManager em = JpaUtil.getEntityManager();
         try {
@@ -109,7 +117,6 @@ public class PartidaDao {
     }
 
     //Metodo para asignar puntaje
-
     public void guardarPartidaConPuntaje(Partida partida, double puntajeObtenido) {
         EntityManager em = JpaUtil.getEntityManager();
         try {

@@ -13,7 +13,8 @@ import java.util.List;
 
 public class JugadorDao {
 
-
+    //La capa de acceso a datos de la clase jugador esta hecha para que se pueda administar los servicios y acciones que podemos realizar
+    //Dentro de la base de datos
 
     // Crear / Registrar jugador
     public void registrarJugador(Jugador jugador) {
@@ -37,8 +38,9 @@ public class JugadorDao {
         }
     }
 
-    // Leer: buscar por nombre
+    // Leer: buscar por nombre, lista a todos los jugadores con ese nombre
     public Jugador buscarNombre(String nombre) {
+        //Validacion para no realizar una busqueda si es nulo
         if (nombre == null || nombre.trim().isEmpty()) return null;
 
         EntityManager em = JpaUtil.getEntityManager();
@@ -53,7 +55,7 @@ public class JugadorDao {
         }
     }
 
-    // Leer: buscar por ID
+    // Leer: buscar por ID, Busca y devuelve al unico jugador con la ID en especifico
     public Jugador buscarPorId(Long id) {
         if (id == null) return null;
 
@@ -82,6 +84,7 @@ public class JugadorDao {
 
     // Actualizar jugador
     public void guardar(Jugador jugador) {
+        //Validaciones para evitar errores de los usuarios al intentar guardar un jugador
         if (jugador == null) throw new IllegalArgumentException("El jugador no puede ser nulo");
 
         if (jugador.getInicioSesion() == null) jugador.setInicioSesion(LocalDate.now());
@@ -103,8 +106,7 @@ public class JugadorDao {
 
     // Eliminar jugador
     public void borrarJugador(Long id) {
-
-
+        //Este metodo busca al jugador con su respectivo ID, lo recibe por parametros y lo elimina
         if (id == null) throw new IllegalArgumentException("El ID del jugador no puede ser nulo");
 
         EntityManager em = JpaUtil.getEntityManager();
@@ -121,7 +123,6 @@ public class JugadorDao {
         } finally {
             em.close();
         }
-
 
     }
 }

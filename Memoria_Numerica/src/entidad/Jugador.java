@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @Table(name = "Jugadores")
 public class Jugador {
 
+    //Clase jugador con sus atributos y validaciones para evitar datos nulos dentro de la base de datos
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,14 +36,14 @@ public class Jugador {
     @Column(name = "fecha_registro", nullable = false)
     private LocalDateTime fechaRegistro;
 
-    // Constructor vacío
+    // Constructor vacío por defecto de la clase
     public Jugador() {
         this.puntaje = 0;
         this.inicioSesion = LocalDate.now();
         this.fechaRegistro = LocalDateTime.now();
     }
 
-    // Constructor con nombre
+    // Constructor lleno de la mayoria de los atributos
     public Jugador(String nombre) {
         this.nombre = nombre;
         this.puntaje = 0;
@@ -49,7 +51,7 @@ public class Jugador {
         this.fechaRegistro = LocalDateTime.now();
     }
 
-    // Getters y Setters
+    // Getters y Setters de la clase Jugador para tener acceso a ellos
     public Long getId() {
         return id;
     }
@@ -90,6 +92,7 @@ public class Jugador {
         this.fechaRegistro = fechaRegistro;
     }
 
+    //Metodo que devuelve de manera ordenada los atributos
     @Override
     public String toString() {
         return "Jugador{" +
