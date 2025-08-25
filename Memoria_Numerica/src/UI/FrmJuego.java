@@ -16,29 +16,31 @@ import java.util.List;
 
 public class FrmJuego extends JFrame {
 
+
+    //variables
     private JPanel panelTablero;
     private JButton[][] botones;
     private int[][] numeros;
     private JButton primerBoton = null;
     private int primerNum = -1;
     private int intentos = 0;
-
     private JLabel labelinten;
     private Timer timer;
     private int tiempoRest;
     private JLabel labeltiem;
     private Jugador jugadorActual;
-
-    // VARIABLES PARA MEJORAS
     private int parejasEncontradas = 0;
     private int totalParejas = 0;
     private int botonesSeleccionados = 0; // Controla máximo 2 selecciones
     private float tiempoLimiteOriginal;
     private String nivelSeleccionado;
 
+
+    //instancia de Service
     private PartidaService partidaService = new PartidaService();
 
     public FrmJuego() {
+
         setTitle("Juego de Memoria Numérica Visual");
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -93,7 +95,6 @@ public class FrmJuego extends JFrame {
         tiempoLimiteOriginal = tiempoLimit;
         labeltiem.setText("Tiempo: " + tiempoRest + "s");
 
-
         numeros = generarMatrizNumeros(fil, column);
         botones = new JButton[fil][column];
 
@@ -104,7 +105,16 @@ public class FrmJuego extends JFrame {
                 button.setFont(new Font("Arial", Font.BOLD, 24));
                 int valor = numeros[i][j];
 
-                button.addActionListener((ActionEvent e) -> manejarBoton(button, valor));
+
+                button.addActionListener((ActionEvent e) -> {
+                    try {
+                        manejarBoton(button, valor);
+                    } catch (IllegalStateException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Error inesperado en el juego. Contacte a soporte.");
+                    }
+                });
 
                 botones[i][j] = button;
                 panelTablero.add(button);
@@ -191,17 +201,31 @@ public class FrmJuego extends JFrame {
                     timer.stop();
                     float tiempoUsado = tiempoLimiteOriginal - tiempoRest;
 
-                    // CALCULAR Y MOSTRAR PUNTAJE
-                    double puntajeObtenido = partidaService.calcularPuntaje(
-                            nivelSeleccionado, intentos, tiempoUsado, tiempoLimiteOriginal);
+                    // CALCULAR Y MOSTRAR PUNTAJE CON TRY-CATCH
+                    try {
+                        double puntajeObtenido = partidaService.calcularPuntaje(
+                                nivelSeleccionado, intentos, tiempoUsado, tiempoLimiteOriginal);
 
-                    JOptionPane.showMessageDialog(this,
-                            "¡GANASTE!\n" +
-                                    "Intentos: " + intentos + "\n" +
-                                    "Tiempo usado: " + (int)tiempoUsado + "s\n" +
-                                    "Puntaje obtenido: " + (int)puntajeObtenido + " puntos!");
+                        JOptionPane.showMessageDialog(this,
+                                "¡GANASTE!\n" +
+                                        "Intentos: " + intentos + "\n" +
+                                        "Tiempo usado: " + (int)tiempoUsado + "s\n" +
+                                        "Puntaje obtenido: " + (int)puntajeObtenido + " puntos!");
 
-                    guardarPartidaConPuntaje(tiempoUsado, puntajeObtenido);
+
+                        try {
+                            guardarPartidaConPuntaje(tiempoUsado, puntajeObtenido);
+                            JOptionPane.showMessageDialog(this, "Partida guardada correctamente.");
+                        } catch (IllegalArgumentException ex) {
+                            JOptionPane.showMessageDialog(this, ex.getMessage());
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(this, "Error al guardar la partida. Contacte a soporte.");
+                        }
+
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Error al calcular el puntaje. Contacte a soporte.");
+                    }
+
                     dispose();
                 }
             } else {
@@ -225,27 +249,19 @@ public class FrmJuego extends JFrame {
 
     private void guardarPartidaConPuntaje(float tiempoUsado, double puntaje) {
         if (jugadorActual == null) {
-            JOptionPane.showMessageDialog(this, "No hay jugador asignado. No se guardará la partida.",
-                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
-            return;
+            throw new IllegalArgumentException("No hay jugador asignado. No se puede guardar la partida.");
         }
 
-        try {
-            Partida partida = new Partida();
-            partida.setJugador(jugadorActual);
-            partida.setNivel(nivelSeleccionado);
-            partida.setIntentos((short) intentos);
-            partida.setTiempo(tiempoUsado);
-            partida.setFecha(LocalDate.now());
-            partida.setPuntaje(puntaje);
+        Partida partida = new Partida();
+        partida.setJugador(jugadorActual);
+        partida.setNivel(nivelSeleccionado);
+        partida.setIntentos((short) intentos);
+        partida.setTiempo(tiempoUsado);
+        partida.setFecha(LocalDate.now());
+        partida.setPuntaje(puntaje);
 
-            partidaService.finalizarPartida(partida, nivelSeleccionado, intentos,
-                    tiempoUsado, tiempoLimiteOriginal);
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al guardar partida: " + ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        partidaService.finalizarPartida(partida, nivelSeleccionado, intentos,
+                tiempoUsado, tiempoLimiteOriginal);
     }
 
     public void setJugadorActual(Jugador jugador) {
