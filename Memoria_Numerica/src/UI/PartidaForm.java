@@ -66,8 +66,6 @@ public class PartidaForm extends JDialog {
     }
 
     // Metodo para agregar partida
-
-
     private void borrarPartida() {
         int fila = table.getSelectedRow();
         if (fila == -1) {
